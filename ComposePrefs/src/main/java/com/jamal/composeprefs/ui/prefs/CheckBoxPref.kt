@@ -1,9 +1,7 @@
 package com.jamal.composeprefs.ui.prefs
 
 import android.util.Log
-import androidx.compose.material.Checkbox
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -73,6 +71,7 @@ fun CheckBoxPref(
         summary = summary,
         leadingIcon = leadingIcon,
         enabled = enabled,
+        darkenOnDisable = true,
         onClick = {
             checked = !checked
             edit(checked)
@@ -81,6 +80,7 @@ fun CheckBoxPref(
         Checkbox(
             checked = checked,
             enabled = enabled,
+            colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colors.primary),
             onCheckedChange = {
                 edit(it)
             }

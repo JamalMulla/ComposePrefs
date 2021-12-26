@@ -38,13 +38,13 @@ import java.lang.Exception
 @Composable
 fun MultiSelectListPref(
     key: String,
-    title: String, // Title is shown above summary and with the dialog
+    title: String,
     modifier: Modifier = Modifier,
     summary: String? = null,
-    defaultValue: Set<String> = setOf(), // default selected keys if this hasn't been saved already. otherwise the value from the datastore is used
+    defaultValue: Set<String> = setOf(),
     onValuesChange: ((Set<String>) -> Unit)? = null,
     dialogBackgroundColor: Color = MaterialTheme.colors.surface,
-    textColor: Color = contentColorFor(backgroundColor = MaterialTheme.colors.surface),
+    textColor: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
     entries: Map<String, String> = mapOf()
 ) {
@@ -52,7 +52,6 @@ fun MultiSelectListPref(
     val selectionKey = stringSetPreferencesKey(key)
     val scope = rememberCoroutineScope()
 
-    // need to observe state with some sort of flow maybe? this also works
     val datastore = LocalPrefsDataStore.current
     val prefs by remember { datastore.data }.collectAsState(initial = null)
 
@@ -112,7 +111,8 @@ fun MultiSelectListPref(
                         ) {
                             Checkbox(
                                 checked = isSelected,
-                                onCheckedChange = { onSelectionChanged() }
+                                onCheckedChange = { onSelectionChanged() },
+                                colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colors.primary)
                             )
                             Text(
                                 text = current.value,
@@ -127,7 +127,6 @@ fun MultiSelectListPref(
             confirmButton = {
                 TextButton(
                     onClick = { showDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
                 ) {
                     Text(text = "Select", style = MaterialTheme.typography.body1)
                 }

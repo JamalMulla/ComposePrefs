@@ -53,7 +53,7 @@ afterEvaluate {
                 from components.release
 
                 groupId = 'com.github.jamalmulla'
-                artifactId = 'Compose Prefs'
+                artifactId = 'ComposePrefs'
                 version = '1.0'
             }
         }

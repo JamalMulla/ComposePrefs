@@ -1,6 +1,9 @@
 package com.jamal.composeprefs.ui
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -27,26 +30,28 @@ fun PrefsScreen(
     content: PrefsScope.() -> Unit
 ) {
     LocalPrefsDataStore = staticCompositionLocalOf { dataStore }
-    // basically call prefsItem/prefsItems() on each thing that was passed
     val prefsScope = PrefsScopeImpl().apply(content)
 
     // Now the dataStore can be accessed by calling LocalPrefsDataStore.current from any child Pref
     CompositionLocalProvider(LocalPrefsDataStore provides dataStore) {
-        LazyColumn(modifier = modifier.fillMaxSize()) {
+        Column {
+            Spacer(modifier = Modifier.height(12.dp))
+            LazyColumn(modifier = modifier.fillMaxSize()) {
 
-            items(prefsScope.prefsItems.size) { index ->
-                prefsScope.getPrefsItem(index)()
+                items(prefsScope.prefsItems.size) { index ->
+                    prefsScope.getPrefsItem(index)()
 
-                if (dividerThickness != 0.dp
-                    && index != prefsScope.prefsItems.size - 1
-                    && !prefsScope.headerIndexes.contains(index)
-                    && !prefsScope.headerIndexes.contains(index + 1)
-                    && !prefsScope.footerIndexes.contains(index)
-                ) {
-                    Divider(
-                        thickness = dividerThickness,
-                        indent = dividerIndent
-                    )
+                    if (dividerThickness != 0.dp
+                        && index != prefsScope.prefsItems.size - 1
+                        && !prefsScope.headerIndexes.contains(index)
+                        && !prefsScope.headerIndexes.contains(index + 1)
+                        && !prefsScope.footerIndexes.contains(index)
+                    ) {
+                        Divider(
+                            thickness = dividerThickness,
+                            indent = dividerIndent
+                        )
+                    }
                 }
             }
         }

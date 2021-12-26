@@ -51,7 +51,6 @@ fun SliderPref(
     leadingIcon: @Composable (() -> Unit)? = null,
 ) {
 
-    //todo overlapping with long title
     val selectionKey = floatPreferencesKey(key)
     val scope = rememberCoroutineScope()
 
@@ -112,16 +111,7 @@ fun SliderPref(
                 valueRange = valueRange,
                 steps = steps,
                 onValueChangeFinished = { edit() },
-                enabled = enabled,
-                colors = SliderDefaults.colors(
-                    thumbColor = MaterialTheme.colors.secondary,
-                    disabledThumbColor = MaterialTheme.colors.onSurface
-                        .copy(alpha = ContentAlpha.disabled)
-                        .compositeOver(MaterialTheme.colors.surface),
-                    activeTrackColor = MaterialTheme.colors.secondary,
-                    disabledActiveTrackColor =
-                    MaterialTheme.colors.onSurface.copy(alpha = SliderDefaults.DisabledActiveTrackAlpha)
-                )
+                enabled = enabled
             )
 
             if (showValue) {
@@ -130,7 +120,7 @@ fun SliderPref(
                     color = textColor,
                     modifier = Modifier
                         .weight(0.5f)
-                        .padding(start = 16.dp)
+                        .padding(start = 8.dp)
                 )
             }
         }

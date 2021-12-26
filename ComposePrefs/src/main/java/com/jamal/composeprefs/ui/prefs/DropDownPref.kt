@@ -26,7 +26,7 @@ import java.lang.Exception
  * @param summary Used to give some more information about what this Pref is for
  * @param defaultValue Default selected key if this Pref hasn't been saved already. Otherwise the value from the dataStore is used.
  * @param onValueChange Will be called with the selected key when an item is selected
- * @param useCurrentValueAsSummary If true, uses the current selected item as the summary. Equivalent of useSimpleSummaryProvider in androidx.
+ * @param useSelectedAsSummary If true, uses the current selected item as the summary. Equivalent of useSimpleSummaryProvider in androidx.
  * @param dropdownBackgroundColor Color of the dropdown menu
  * @param textColor Text colour of the [title] and [summary]
  * @param enabled If false, this Pref cannot be clicked and the dropdown menu will not show.
@@ -41,9 +41,9 @@ fun DropDownPref(
     summary: String? = null,
     defaultValue: String? = null,
     onValueChange: ((String) -> Unit)? = null,
-    useCurrentValueAsSummary: Boolean = false,
+    useSelectedAsSummary: Boolean = false,
     dropdownBackgroundColor: Color? = null,
-    textColor: Color = contentColorFor(backgroundColor = MaterialTheme.colors.surface),
+    textColor: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
     entries: Map<String, String> = mapOf()
 ) {
@@ -76,7 +76,11 @@ fun DropDownPref(
         TextPref(
             title = title,
             modifier = modifier,
-            summary = if (useCurrentValueAsSummary) entries[value] else summary,
+            summary = when {
+                useSelectedAsSummary && value != null -> entries[value]
+                useSelectedAsSummary && value == null -> "Not Set"
+                else -> summary
+            },
             textColor = textColor,
             enabled = enabled,
             onClick = {

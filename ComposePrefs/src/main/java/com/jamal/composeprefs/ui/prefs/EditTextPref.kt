@@ -51,8 +51,8 @@ fun EditTextPref(
     defaultValue: String = "",
     onValueSaved: ((String) -> Unit) = {},
     onValueChange: ((String) -> Unit) = {},
-    dialogBackgroundColor: Color = MaterialTheme.colors.surface,
-    textColor: Color = contentColorFor(backgroundColor = MaterialTheme.colors.surface),
+    dialogBackgroundColor: Color = MaterialTheme.colors.background,
+    textColor: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
 ) {
 
@@ -149,8 +149,7 @@ fun EditTextPref(
                     ) {
                         TextButton(
                             modifier = Modifier.padding(end = 16.dp),
-                            onClick = { showDialog = false },
-                            colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
+                            onClick = { showDialog = false }
                         ) {
                             Text("Cancel", style = MaterialTheme.typography.body1)
                         }
@@ -160,8 +159,7 @@ fun EditTextPref(
                             onClick = {
                                 edit()
                                 showDialog = false
-                            },
-                            colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
+                            }
                         ) {
                             Text("Save", style = MaterialTheme.typography.body1)
                         }

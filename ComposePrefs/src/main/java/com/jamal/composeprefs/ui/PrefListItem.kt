@@ -19,7 +19,7 @@ fun PrefsListItem(
     icon: @Composable (() -> Unit)? = null,
     secondaryText: @Composable (() -> Unit)? = null,
     trailing: @Composable (() -> Unit)? = null,
-    textColor: Color = LocalTextStyle.current.color,
+    textColor: Color = MaterialTheme.colors.onBackground,
     minimalHeight: Boolean = false,
     text: @Composable () -> Unit
 ) {
@@ -69,6 +69,8 @@ private object AnyLine {
     private val MinHeightSmaller = 32.dp
     private val IconMinPaddedWidth = 40.dp
     private val ContentPadding = 16.dp
+    private val VerticalPadding = 12.dp
+    private val SingleLinePadding = 4.dp //used when no secondary text is supplied
 
     @Composable
     fun CustomListItem(
@@ -85,8 +87,15 @@ private object AnyLine {
                 .padding(
                     start = ContentPadding,
                     end = ContentPadding,
-                    top = ContentPadding,
-                    bottom = if (minimalHeight) 0.dp else ContentPadding
+                    top = when {
+                        secondaryText == null && !minimalHeight -> SingleLinePadding
+                        else -> VerticalPadding
+                    },
+                    bottom = when {
+                        minimalHeight -> 0.dp
+                        secondaryText == null -> SingleLinePadding
+                        else -> VerticalPadding
+                    }
                 )
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -102,7 +111,7 @@ private object AnyLine {
 
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(0.8f)
+                modifier = Modifier.weight(1f)
             ) {
                 text()
                 secondaryText?.invoke()

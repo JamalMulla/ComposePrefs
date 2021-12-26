@@ -26,7 +26,7 @@ fun PrefsCategoryHeader(
     ) {
         Text(
             title,
-            color = MaterialTheme.colors.secondary,
+            color = MaterialTheme.colors.primary,
             fontSize = LocalTextStyle.current.fontSize.times(FontSizeMultiplier),
             fontWeight = FontWeight.SemiBold
         )

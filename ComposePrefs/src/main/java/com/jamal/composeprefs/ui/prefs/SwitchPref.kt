@@ -1,9 +1,7 @@
 package com.jamal.composeprefs.ui.prefs
 
 import android.util.Log
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Switch
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -67,6 +65,7 @@ fun SwitchPref(
         modifier = modifier,
         textColor = textColor,
         summary = summary,
+        darkenOnDisable = true,
         leadingIcon = leadingIcon,
         enabled = enabled,
         onClick = {
@@ -77,6 +76,7 @@ fun SwitchPref(
         Switch(
             checked = checked,
             enabled = enabled,
+            colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colors.primary),
             onCheckedChange = {
                 edit(it)
             }

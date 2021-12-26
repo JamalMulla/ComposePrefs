@@ -19,6 +19,8 @@ import com.jamal.composeprefs.ui.LocalPrefsDataStore
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
+//TODO useSelectedAsSummary
+
 /**
  * Preference that shows a list of entries in a Dialog where a single entry can be selected at one time.
  *
@@ -28,6 +30,7 @@ import java.lang.Exception
  * @param summary Used to give some more information about what this Pref is for
  * @param defaultValue Default selected key if this Pref hasn't been saved already. Otherwise the value from the dataStore is used.
  * @param onValueChange Will be called with the selected key when an item is selected
+ * @param useSelectedAsSummary If true, uses the current selected item as the summary
  * @param dialogBackgroundColor Background color of the Dialog
  * @param textColor Text colour of the [title] and [summary]
  * @param enabled If false, this Pref cannot be clicked and the Dialog cannot be shown.
@@ -38,13 +41,14 @@ import java.lang.Exception
 @Composable
 fun ListPref(
     key: String,
-    title: String, // Title is shown above summary and with the dialog
+    title: String,
     modifier: Modifier = Modifier,
     summary: String? = null,
-    defaultValue: String? = null, // default selected key if this hasn't been saved already. otherwise the value from the datastore is used
+    defaultValue: String? = null,
     onValueChange: ((String) -> Unit)? = null,
+    useSelectedAsSummary: Boolean = false,
     dialogBackgroundColor: Color = MaterialTheme.colors.surface,
-    textColor: Color = contentColorFor(backgroundColor = MaterialTheme.colors.surface),
+    textColor: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
     entries: Map<String, String> = mapOf()
 ) {
@@ -75,7 +79,11 @@ fun ListPref(
 
     TextPref(
         title = title,
-        summary = summary,
+        summary = when {
+            useSelectedAsSummary && selected != null -> entries[selected]
+            useSelectedAsSummary && selected == null -> "Not Set"
+            else -> summary
+        },
         modifier = modifier,
         textColor = textColor,
         enabled = true,
@@ -104,7 +112,8 @@ fun ListPref(
                         ) {
                             RadioButton(
                                 selected = isSelected,
-                                onClick = { if (!isSelected) onSelected() }
+                                onClick = { if (!isSelected) onSelected() },
+                                colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primary)
                             )
                             Text(
                                 text = current.value,
@@ -118,7 +127,6 @@ fun ListPref(
             confirmButton = {
                 TextButton(
                     onClick = { showDialog = false },
-                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
                 ) {
                     Text("Cancel", style = MaterialTheme.typography.body1)
                 }

@@ -1,0 +1,141 @@
+package com.jamal.composeprefs.ui.prefs
+
+import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.window.DialogProperties
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringSetPreferencesKey
+import com.jamal.composeprefs.ui.LocalPrefsDataStore
+import kotlinx.coroutines.launch
+import java.lang.Exception
+
+/**
+ * Preference that shows a list of entries in a Dialog where multiple entries can be selected at one time.
+ *
+ * @param key Key used to identify this Pref in the DataStore
+ * @param title Main text which describes the Pref. Shown above the summary and in the Dialog.
+ * @param modifier Modifier applied to the Text aspect of this Pref
+ * @param summary Used to give some more information about what this Pref is for
+ * @param defaultValue Default selected key if this Pref hasn't been saved already. Otherwise the value from the dataStore is used.
+ * @param onValuesChange Will be called with the [Set] of selected keys when an item is selected/unselected
+ * @param dialogBackgroundColor Background color of the Dialog
+ * @param textColor Text colour of the [title] and [summary]
+ * @param enabled If false, this Pref cannot be clicked and the Dialog cannot be shown.
+ * @param entries Map of keys to values for entries that should be shown in the Dialog.
+ */
+@ExperimentalComposeUiApi
+@ExperimentalMaterialApi
+@Composable
+fun MultiSelectListPref(
+    key: String,
+    title: String, // Title is shown above summary and with the dialog
+    modifier: Modifier = Modifier,
+    summary: String? = null,
+    defaultValue: Set<String> = setOf(), // default selected keys if this hasn't been saved already. otherwise the value from the datastore is used
+    onValuesChange: ((Set<String>) -> Unit)? = null,
+    dialogBackgroundColor: Color = MaterialTheme.colors.surface,
+    textColor: Color = contentColorFor(backgroundColor = MaterialTheme.colors.surface),
+    enabled: Boolean = true,
+    entries: Map<String, String> = mapOf()
+) {
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    val selectionKey = stringSetPreferencesKey(key)
+    val scope = rememberCoroutineScope()
+
+    // need to observe state with some sort of flow maybe? this also works
+    val datastore = LocalPrefsDataStore.current
+    val prefs by remember { datastore.data }.collectAsState(initial = null)
+
+    var selected = defaultValue
+    prefs?.get(selectionKey)?.also { selected = it } // starting value if it exists in datastore
+
+    fun edit(isSelected: Boolean, current: Map.Entry<String, String>) = run {
+        scope.launch {
+            try {
+                //todo improve by handling errors
+                val result = when (!isSelected) {
+                    true -> selected + current.key
+                    false -> selected - current.key
+                }
+                datastore.edit { preferences ->
+                    preferences[selectionKey] = result
+                }
+                onValuesChange?.invoke(result)
+                selected = result
+            } catch (e: Exception) {
+                Log.e(
+                    "MultiSelectListPref",
+                    "Could not write pref $key to database. ${e.printStackTrace()}"
+                )
+            }
+        }
+    }
+
+    TextPref(
+        title = title,
+        modifier = modifier,
+        summary = summary,
+        textColor = textColor,
+        enabled = true,
+        onClick = { if (enabled) showDialog = !showDialog },
+    )
+
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text(text = title) },
+            text = {
+                Column {
+                    entries.forEach { current ->
+                        val isSelected = selected.contains(current.key)
+                        val onSelectionChanged = {
+                            edit(isSelected, current)
+                        }
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .selectable(
+                                    selected = isSelected,
+                                    onClick = { onSelectionChanged() }
+                                ),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Checkbox(
+                                checked = isSelected,
+                                onCheckedChange = { onSelectionChanged() }
+                            )
+                            Text(
+                                text = current.value,
+                                style = MaterialTheme.typography.body2,
+                                color = textColor
+                            )
+                        }
+                    }
+
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = { showDialog = false },
+                    colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colors.secondary),
+                ) {
+                    Text(text = "Select", style = MaterialTheme.typography.body1)
+                }
+            },
+            backgroundColor = dialogBackgroundColor,
+            properties = DialogProperties(
+                usePlatformDefaultWidth = true
+            )
+        )
+    }
+}

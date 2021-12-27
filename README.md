@@ -150,6 +150,18 @@ MultiSelectListPref(
 And that's it! You can create your whole preference screen in this way, and you can modify the individual parameters of each preference composable to achieve the functionality you require.
 If something is missing, please create an Issue so we can discuss possible solutions. After all, this is still version 1.0.0 and there are bound to be bugs and missing features.
 
+## Screenshots of this sample app
+<p float="left">
+    <img src="/img/1.jpg?raw=true" width="150"/>
+    <img src="/img/2.jpg?raw=true" width="150"/>
+    <img src="/img/3.jpg?raw=true" width="150"/>
+</p>
+<p float="left">    
+    <img src="/img/4.jpg?raw=true" width="150"/>
+    <img src="/img/5.jpg?raw=true" width="150"/>
+    <img src="/img/6.jpg?raw=true" width="150"/>
+</p>
+
 
 # Download
 In your `settings.gradle` file add the following

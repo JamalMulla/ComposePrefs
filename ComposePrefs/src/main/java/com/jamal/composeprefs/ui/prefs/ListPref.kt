@@ -19,8 +19,6 @@ import com.jamal.composeprefs.ui.LocalPrefsDataStore
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-//TODO useSelectedAsSummary
-
 /**
  * Preference that shows a list of entries in a Dialog where a single entry can be selected at one time.
  *
@@ -48,6 +46,7 @@ fun ListPref(
     onValueChange: ((String) -> Unit)? = null,
     useSelectedAsSummary: Boolean = false,
     dialogBackgroundColor: Color = MaterialTheme.colors.surface,
+    contentColor: Color = contentColorFor(dialogBackgroundColor),
     textColor: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
     entries: Map<String, String> = mapOf()
@@ -133,6 +132,7 @@ fun ListPref(
 
             },
             backgroundColor = dialogBackgroundColor,
+            contentColor = contentColor,
             properties = DialogProperties(
                 usePlatformDefaultWidth = true
             ),

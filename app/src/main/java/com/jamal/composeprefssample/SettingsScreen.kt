@@ -10,9 +10,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.jamal.composeprefs.ui.GroupHeader
 import com.jamal.composeprefs.ui.PrefsScreen
 import com.jamal.composeprefs.ui.prefs.*
-
 
 @ExperimentalMaterialApi
 @ExperimentalComposeUiApi
@@ -22,7 +22,12 @@ fun SettingsScreen() {
 
         PrefsScreen(dataStore = LocalContext.current.dataStore) {
 
-            prefsGroup("TextPref") {
+            prefsGroup({
+                GroupHeader(
+                    title = "TextPref",
+                    color = MaterialTheme.colors.secondary
+                )
+            }) {
                 prefsItem { TextPref(title = "Just some text") }
                 prefsItem { TextPref(title = "Just some text", summary = "But now with a summary") }
                 prefsItem {

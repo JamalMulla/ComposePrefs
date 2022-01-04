@@ -18,12 +18,20 @@ interface PrefsScope {
     fun prefsItem(content: @Composable PrefsScope.() -> Unit)
 
     /**
-     * Adds a group of Prefs
+     * Adds a group of Prefs with a title.
      *
      * @param title Group header text. Will be shown above the list of Prefs
      * @param items All the prefs in this group
      */
     fun prefsGroup(title: String, items: PrefsScope.() -> Unit)
+
+    /**
+     * Adds a group of Prefs. This overload is intended for passing in a [GroupHeader] if you want more control over the header.
+     *
+     * @param header Group header. Will be shown above the list of Prefs
+     * @param items All the prefs in this group
+     */
+    fun prefsGroup(header: @Composable PrefsScope.() -> Unit, items: PrefsScope.() -> Unit)
 }
 
 internal class PrefsScopeImpl : PrefsScope {
@@ -52,12 +60,32 @@ internal class PrefsScopeImpl : PrefsScope {
         // - if current current item is header of new group
         // - if current item is end of group
 
-
         // add header index so we know where each group starts
         _headerIndexes.add(this.prefsItems.size)
 
         this.prefsItem {
-            PrefsCategoryHeader(title)
+            GroupHeader(title)
+        }
+
+        // add all children to hierarchy
+        this.apply(items)
+
+        this.prefsItem { Spacer(modifier = Modifier.height(16.dp)) }
+
+        // add totalSize -2/-1 to footerIndexes as that is the index of the last item added and the spacer respectively
+        _footerIndexes.add(this.prefsItems.size - 2)
+        _footerIndexes.add(this.prefsItems.size - 1)
+    }
+
+    override fun prefsGroup(
+        header: @Composable PrefsScope.() -> Unit,
+        items: PrefsScope.() -> Unit
+    ) {
+        // add header index so we know where each group starts
+        _headerIndexes.add(this.prefsItems.size)
+
+        this.prefsItem {
+            header()
         }
 
         // add all children to hierarchy

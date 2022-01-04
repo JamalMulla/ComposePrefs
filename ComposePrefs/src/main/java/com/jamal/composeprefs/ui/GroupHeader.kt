@@ -9,12 +9,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PrefsCategoryHeader(
-    title: String
+fun GroupHeader(
+    title: String,
+    color: Color = MaterialTheme.colors.primary
 ) {
     Box(
         Modifier
@@ -26,7 +28,7 @@ fun PrefsCategoryHeader(
     ) {
         Text(
             title,
-            color = MaterialTheme.colors.primary,
+            color = color,
             fontSize = LocalTextStyle.current.fontSize.times(FontSizeMultiplier),
             fontWeight = FontWeight.SemiBold
         )

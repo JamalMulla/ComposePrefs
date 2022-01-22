@@ -1,9 +1,11 @@
 package com.jamal.composeprefs.ui.prefs
 
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
@@ -49,26 +52,27 @@ fun ListPref(
     contentColor: Color = contentColorFor(dialogBackgroundColor),
     textColor: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
-    entries: Map<String, String> = mapOf()
+    entries: Map<String, String> = mapOf(), //TODO: Change to List?
 ) {
+
+    val entryList = entries.toList()
     var showDialog by rememberSaveable { mutableStateOf(false) }
     val selectionKey = stringPreferencesKey(key)
     val scope = rememberCoroutineScope()
 
-    // need to observe state with some sort of flow maybe? this also works
     val datastore = LocalPrefsDataStore.current
     val prefs by remember { datastore.data }.collectAsState(initial = null)
 
     var selected = defaultValue
     prefs?.get(selectionKey)?.also { selected = it } // starting value if it exists in datastore
 
-    fun edit(current: Map.Entry<String, String>) = run {
+    fun edit(current: Pair<String, String>) = run {
         scope.launch {
             try {
                 datastore.edit { preferences ->
-                    preferences[selectionKey] = current.key
+                    preferences[selectionKey] = current.first
                 }
-                onValueChange?.invoke(current.key)
+                onValueChange?.invoke(current.first)
                 showDialog = false
             } catch (e: Exception) {
                 Log.e("ListPref", "Could not write pref $key to database. ${e.printStackTrace()}")
@@ -92,33 +96,36 @@ fun ListPref(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(text = title) },
             text = {
-                Column {
-                    entries.forEach { current ->
-                        val isSelected = selected == current.key
-                        val onSelected = {
-                            edit(current)
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .selectable(
+                Column() {
+                    Text(modifier = Modifier.padding(vertical = 16.dp), text = title)
+                    LazyColumn {
+                        items(entryList) { current ->
+
+                            val isSelected = selected == current.first
+                            val onSelected = {
+                                edit(current)
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .selectable(
+                                        selected = isSelected,
+                                        onClick = { if (!isSelected) onSelected() }
+                                    ),
+                                verticalAlignment = CenterVertically,
+                            ) {
+                                RadioButton(
                                     selected = isSelected,
-                                    onClick = { if (!isSelected) onSelected() }
-                                ),
-                            verticalAlignment = CenterVertically,
-                        ) {
-                            RadioButton(
-                                selected = isSelected,
-                                onClick = { if (!isSelected) onSelected() },
-                                colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primary)
-                            )
-                            Text(
-                                text = current.value,
-                                style = MaterialTheme.typography.body2,
-                                color = textColor
-                            )
+                                    onClick = { if (!isSelected) onSelected() },
+                                    colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primary)
+                                )
+                                Text(
+                                    text = current.second,
+                                    style = MaterialTheme.typography.body2,
+                                    color = textColor
+                                )
+                            }
                         }
                     }
                 }
@@ -138,6 +145,4 @@ fun ListPref(
             ),
         )
     }
-
-
 }

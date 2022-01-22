@@ -204,8 +204,7 @@ MultiSelectListPref(
 
 And that's it! You can create your whole preference screen in this way, and you can modify the
 individual parameters of each preference composable to achieve the functionality you require. If
-something is missing, please create an Issue so we can discuss possible solutions. After all, this
-is still version 1.0.0 and there are bound to be bugs and missing features.
+something is missing, please create an Issue so we can discuss possible solutions.
 
 # Download
 
@@ -218,7 +217,7 @@ maven { url "https://jitpack.io" }
 and in your module `build.gradle` file add the dependencies
 
 ``` groovy
-implementation "com.github.JamalMulla:ComposePrefs:<version>" // Current is 1.0.1
+implementation "com.github.JamalMulla:ComposePrefs:<version>" // Current is 1.0.2
 implementation "androidx.datastore:datastore-preferences:1.0.0"
 ```
 

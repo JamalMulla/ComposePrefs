@@ -4,6 +4,9 @@ import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.material.*
 import androidx.compose.runtime.*
@@ -12,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -46,8 +50,10 @@ fun MultiSelectListPref(
     dialogBackgroundColor: Color = MaterialTheme.colors.surface,
     textColor: Color = MaterialTheme.colors.onBackground,
     enabled: Boolean = true,
-    entries: Map<String, String> = mapOf()
+    entries: Map<String, String> = mapOf() //TODO: Change to List?
 ) {
+
+    val entryList = entries.toList()
     var showDialog by rememberSaveable { mutableStateOf(false) }
     val selectionKey = stringSetPreferencesKey(key)
     val scope = rememberCoroutineScope()
@@ -58,13 +64,12 @@ fun MultiSelectListPref(
     var selected = defaultValue
     prefs?.get(selectionKey)?.also { selected = it } // starting value if it exists in datastore
 
-    fun edit(isSelected: Boolean, current: Map.Entry<String, String>) = run {
+    fun edit(isSelected: Boolean, current: Pair<String, String>) = run {
         scope.launch {
             try {
-                //todo improve by handling errors
                 val result = when (!isSelected) {
-                    true -> selected + current.key
-                    false -> selected - current.key
+                    true -> selected + current.first
+                    false -> selected - current.first
                 }
                 datastore.edit { preferences ->
                     preferences[selectionKey] = result
@@ -92,36 +97,37 @@ fun MultiSelectListPref(
     if (showDialog) {
         AlertDialog(
             onDismissRequest = { showDialog = false },
-            title = { Text(text = title) },
             text = {
                 Column {
-                    entries.forEach { current ->
-                        val isSelected = selected.contains(current.key)
-                        val onSelectionChanged = {
-                            edit(isSelected, current)
-                        }
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .selectable(
-                                    selected = isSelected,
-                                    onClick = { onSelectionChanged() }
-                                ),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Checkbox(
-                                checked = isSelected,
-                                onCheckedChange = { onSelectionChanged() },
-                                colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colors.primary)
-                            )
-                            Text(
-                                text = current.value,
-                                style = MaterialTheme.typography.body2,
-                                color = textColor
-                            )
+                    Text(modifier = Modifier.padding(vertical = 16.dp), text = title)
+                    LazyColumn {
+                        items(entryList) { current ->
+                            val isSelected = selected.contains(current.first)
+                            val onSelectionChanged = {
+                                edit(isSelected, current)
+                            }
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .selectable(
+                                        selected = isSelected,
+                                        onClick = { onSelectionChanged() }
+                                    ),
+                                verticalAlignment = Alignment.CenterVertically,
+                            ) {
+                                Checkbox(
+                                    checked = isSelected,
+                                    onCheckedChange = { onSelectionChanged() },
+                                    colors = CheckboxDefaults.colors(checkedColor = MaterialTheme.colors.primary)
+                                )
+                                Text(
+                                    text = current.second,
+                                    style = MaterialTheme.typography.body2,
+                                    color = textColor
+                                )
+                            }
                         }
                     }
-
                 }
             },
             confirmButton = {

@@ -190,7 +190,20 @@ fun SettingsScreen() {
                             "1" to "Entry 2",
                             "2" to "Entry 3",
                             "3" to "Entry 4",
-                            "4" to "Entry 5"
+                            "4" to "Entry 5",
+                            "5" to "Entry 6",
+                            "6" to "Entry 7",
+                            "7" to "Entry 8",
+                            "8" to "Entry 9",
+                            "9" to "Entry 10",
+                            "10" to "Entry 11",
+                            "11" to "Entry 12",
+                            "12" to "Entry 13",
+                            "13" to "Entry 14",
+                            "14" to "Entry 15",
+                            "15" to "Entry 16",
+                            "16" to "Entry 17",
+                            "17" to "Entry 18"
                         )
                     )
                 }
@@ -222,7 +235,36 @@ fun SettingsScreen() {
                             "1" to "Entry 2",
                             "2" to "Entry 3",
                             "3" to "Entry 4",
-                            "4" to "Entry 5"
+                            "4" to "Entry 5",
+                            "5" to "Entry 6"
+                        )
+                    )
+                }
+
+                prefsItem {
+                    MultiSelectListPref(
+                        key = "msl2",
+                        title = "MultiSelectListPref",
+                        summary = "Pick multiple entries at once from a long list",
+                        entries = mapOf(
+                            "0" to "Entry 1",
+                            "1" to "Entry 2",
+                            "2" to "Entry 3",
+                            "3" to "Entry 4",
+                            "4" to "Entry 5",
+                            "5" to "Entry 6",
+                            "6" to "Entry 7",
+                            "7" to "Entry 8",
+                            "8" to "Entry 9",
+                            "9" to "Entry 10",
+                            "10" to "Entry 11",
+                            "11" to "Entry 12",
+                            "12" to "Entry 13",
+                            "13" to "Entry 14",
+                            "14" to "Entry 15",
+                            "15" to "Entry 16",
+                            "16" to "Entry 17",
+                            "17" to "Entry 18"
                         )
                     )
                 }

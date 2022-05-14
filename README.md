@@ -2,11 +2,13 @@
 
 # ComposePrefs
 
+This is the M2 version of ComposePrefs. The M3 version can be found [here](https://github.com/JamalMulla/ComposePrefs3/).
+
+
 ComposePrefs is a preferences library for Jetpack Compose which makes it easy to implement
 preferences/settings in your Compose Android app. Preferences are created and positioned using an
 intuitive and easy to use API which follows a similar design to the existing Material Composables.
-Currently, the library uses the Composables available from M2 as M3 is not quite stable enough to
-use. ComposePrefs
+ComposePrefs
 uses [DataStore](https://developer.android.com/topic/libraries/architecture/datastore) to store the
 actual preference data.
 

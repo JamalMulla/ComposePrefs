@@ -33,7 +33,9 @@ import java.lang.Exception
  * @param onValueChange Will be called with the selected key when an item is selected
  * @param useSelectedAsSummary If true, uses the current selected item as the summary
  * @param dialogBackgroundColor Background color of the Dialog
+ * @param contentColor Preferred content color passed to dialog's children
  * @param textColor Text colour of the [title] and [summary]
+ * @param selectionColor Colour of the radiobutton of the selected item
  * @param enabled If false, this Pref cannot be clicked and the Dialog cannot be shown.
  * @param entries Map of keys to values for entries that should be shown in the Dialog.
  */
@@ -51,6 +53,7 @@ fun ListPref(
     dialogBackgroundColor: Color = MaterialTheme.colors.surface,
     contentColor: Color = contentColorFor(dialogBackgroundColor),
     textColor: Color = MaterialTheme.colors.onBackground,
+    selectionColor: Color = MaterialTheme.colors.primary,
     enabled: Boolean = true,
     entries: Map<String, String> = mapOf(), //TODO: Change to List?
 ) {
@@ -118,7 +121,7 @@ fun ListPref(
                                 RadioButton(
                                     selected = isSelected,
                                     onClick = { if (!isSelected) onSelected() },
-                                    colors = RadioButtonDefaults.colors(selectedColor = MaterialTheme.colors.primary)
+                                    colors = RadioButtonDefaults.colors(selectedColor = selectionColor)
                                 )
                                 Text(
                                     text = current.second,
@@ -134,7 +137,7 @@ fun ListPref(
                 TextButton(
                     onClick = { showDialog = false },
                 ) {
-                    Text("Cancel", style = MaterialTheme.typography.body1)
+                    Text("Cancel", style = MaterialTheme.typography.body1, color = textColor)
                 }
 
             },

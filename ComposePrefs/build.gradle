@@ -11,7 +11,7 @@ android {
         minSdk 21
         targetSdk 31
         versionCode 2
-        versionName "1.0.2"
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
-    implementation "androidx.compose.ui:ui:1.2.0-alpha01"
-    implementation "androidx.compose.material:material:1.2.0-alpha01"
+    implementation "androidx.compose.ui:ui:1.2.0-beta02"
+    implementation "androidx.compose.material:material:1.2.0-beta02"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 }
 
@@ -54,7 +54,7 @@ afterEvaluate {
 
                 groupId = 'com.github.jamalmulla'
                 artifactId = 'ComposePrefs'
-                version = '1.0.2'
+                version = '1.0.3'
             }
         }
     }

@@ -20,7 +20,6 @@ val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "se
 
 @ExperimentalComposeUiApi
 @ExperimentalMaterialApi
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

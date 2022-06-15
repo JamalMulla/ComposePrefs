@@ -209,17 +209,21 @@ individual parameters of each preference composable to achieve the functionality
 something is missing, please create an Issue so we can discuss possible solutions.
 
 # Download
-
-In your `settings.gradle` file add the following
+Add `jitpack.io` repository to your root `build.gradle` at the end of repositories:
 
 ``` groovy
-maven { url "https://jitpack.io" }
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
 ```
 
 and in your module `build.gradle` file add the dependencies
 
 ``` groovy
-implementation "com.github.JamalMulla:ComposePrefs:<version>" // Current is 1.0.4
+implementation "com.github.JamalMulla:ComposePrefs:<version>" // Current is 1.0.5
 implementation "androidx.datastore:datastore-preferences:1.0.0"
 ```
 

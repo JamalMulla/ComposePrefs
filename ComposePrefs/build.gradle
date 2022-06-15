@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         minSdk 21
-        targetSdk 31
+        targetSdk 32
         versionCode 2
-        versionName "1.0.4"
+        versionName "1.0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -35,13 +35,13 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.2.0-alpha01"
+        kotlinCompilerExtensionVersion "1.2.0-beta03"
     }
 }
 
 dependencies {
-    implementation "androidx.compose.ui:ui:1.2.0-beta02"
-    implementation "androidx.compose.material:material:1.2.0-beta02"
+    implementation "androidx.compose.ui:ui:1.2.0-beta03"
+    implementation "androidx.compose.material:material:1.2.0-beta03"
     implementation "androidx.datastore:datastore-preferences:1.0.0"
 }
 
@@ -54,7 +54,7 @@ afterEvaluate {
 
                 groupId = 'com.github.jamalmulla'
                 artifactId = 'ComposePrefs'
-                version = '1.0.4'
+                version = '1.0.5'
             }
         }
     }
